@@ -6,7 +6,7 @@ import gsap from 'gsap'
 import * as dat from 'dat.gui'
 import { BufferAttribute } from 'three'
 
-// 环境遮挡贴图与强度
+//  环境贴图    场景贴图
 
 
 // 1.创建场景
@@ -20,71 +20,84 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 // 设置相机位置
 camera.position.set(0, 0, 10)
 
+// 立方纹理 
+const loader = new THREE.CubeTextureLoader();
+
+const textureCube = loader.load([
+    'textures/cubeMap/px.png',
+    'textures/cubeMap/nx.png',
+    'textures/cubeMap/py.png',
+    'textures/cubeMap/ny.png',
+    'textures/cubeMap/pz.png',
+    'textures/cubeMap/nz.png',
+]);
+
+
 // 加入场景
 scene.add(camera)
 
-//纹理加载器
-
-
-const textureLoader = new THREE.TextureLoader()
-
-// 纹理1
-const door1 = textureLoader.load('./textures/door/door1.jpeg')
-const alpha = textureLoader.load('./textures/alpha.jpg')
-const apalpha = textureLoader.load('./textures/aoalpha.jpg')
-
-// console.log(door1);
-// 设置纹理偏移
-// door1.offset.set(0.5, 0.5)
-// 设置纹理旋转  45°
-// door1.rotation = Math.PI / 4
-// 设置纹理旋转中心点
-// door1.center.set(0.5, 0.5)
-// 设置纹理重复
-// door1.repeat.set(2, 3)
-// 设置纹理重复模式
-// door1.wrapS = THREE.MirroredRepeatWrapping
-// door1.wrapT = THREE.RepeatWrapping
-
-
-// door1.magFilter = THREE.NearestFilter
-// door1.minFilter = THREE.NearestMipmapNearestFilter
+let div = document.createElement('div')
+div.style.width = '200px'
+div.style.height = '100px'
+div.style.position = 'fixed'
+div.style.right = '50px'
+div.style.top = '50px'
+div.style.color = '#fff'
+document.body.appendChild(div)
 
 
 // 创建几何体
 
 // 物体
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
+const cubeGeometry = new THREE.SphereGeometry(1, 20, 20)
 // 材质
-const basicMaterial = new THREE.MeshBasicMaterial({
-    color: '#ffff00',
-    map: door1,  // 纹理图
-    alphaMap: alpha, // 透明纹理图
-    transparent: true, //设置可以透明
-    side: THREE.DoubleSide,
-    aoMap: apalpha,
-    aoMapIntensity: 0.6, //遮挡强度
+const material = new THREE.MeshStandardMaterial({
+    envMap: textureCube,
+    // map: preview,  // 纹理图
+    // alphaMap: wfuAlbedo, // 透明纹理图
+    // transparent: true, //设置可以透明
+    // side: THREE.DoubleSide,
+    // displacementMap: wfuDisplacementMap,
+    // aoMap: wfuAo,
+    // normalMap: wfuNormal,
+    // bumpMap: wfuBump,
+    // roughnessMap: wfuRoughnessMap,
+    // aoMapIntensity: 0.5, //遮挡强度
+    roughness: 0.1,//粗糙程度
+    metalness: 0.7,//金属程度
     // opacity:0.5
 })
 
-const mesh = new THREE.Mesh(cubeGeometry, basicMaterial);
+const mesh = new THREE.Mesh(cubeGeometry, material);
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1)
+const planeGeometry = new THREE.PlaneGeometry(1, 1, 5, 5)
 
-const plane = new THREE.Mesh(planeGeometry, basicMaterial);
+const plane = new THREE.Mesh(planeGeometry, material);
 
 plane.position.set(3, 0, 0)
 
 
 // 平面添加第二组uv数据
-planeGeometry.setAttribute('uv2', new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2))
+// planeGeometry.setAttribute('uv2', new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2))
 
 // mesh 添加第二组uv数据
-cubeGeometry.setAttribute('uv2', new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2))
+// cubeGeometry.setAttribute('uv2', new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2))
 
+
+// 灯光(环境光)
+const light = new THREE.AmbientLight(0x404040, 2); // soft white light
+
+// 灯光(直线光)
+// const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+// directionalLight.position.set(10, 10, 10)
+
+// scene.add(directionalLight);
+scene.add(light);
 scene.add(mesh)
 scene.add(plane)
 
+// 背景氛围贴图 
+scene.background = textureCube
 
 
 // 修改物体的位置

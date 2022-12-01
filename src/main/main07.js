@@ -6,7 +6,7 @@ import gsap from 'gsap'
 import * as dat from 'dat.gui'
 import { BufferAttribute } from 'three'
 
-// 环境遮挡贴图与强度
+// 环境贴图
 
 
 // 1.创建场景
@@ -23,15 +23,50 @@ camera.position.set(0, 0, 10)
 // 加入场景
 scene.add(camera)
 
-//纹理加载器
+let div = document.createElement('div')
+div.style.width = '200px'
+div.style.height = '100px'
+div.style.position = 'fixed'
+div.style.right = '50px'
+div.style.top = '50px'
+div.style.color = '#fff'
+document.body.appendChild(div)
+
+let event = {}
+event.onLoad = function () {
+    console.log('加载完成');
+}
+event.onProgress = function (url, itemsLoaded, itemsTotal) {
+    console.log('加载过程中' + url);
+    console.log('目前已加载项的个数。' + itemsLoaded);
+    console.log('总共所需要加载项的个数。' + itemsTotal);
+    console.log('加载进度百分比', (itemsLoaded / itemsTotal * 100).toFixed(2) + '%');
+    div.innerHTML = (itemsLoaded / itemsTotal * 100).toFixed(2) + '%'
+
+}
+event.onError = function (url) {
+    console.log('加载错误' + url);
+}
 
 
-const textureLoader = new THREE.TextureLoader()
+// 设置加载管理器
+const manager = new THREE.LoadingManager(event.onLoad, event.onProgress, event.onError);
 
-// 纹理1
-const door1 = textureLoader.load('./textures/door/door1.jpeg')
-const alpha = textureLoader.load('./textures/alpha.jpg')
-const apalpha = textureLoader.load('./textures/aoalpha.jpg')
+//纹理加载器   (被manager 统一管理)
+const textureLoader = new THREE.TextureLoader(manager)
+
+
+
+
+// 纹理加载
+const preview = textureLoader.load('./textures/wfu/wfufefu_Popup_3840_sp.jpg')
+const wfuAlbedo = textureLoader.load('./textures/wfu/wfufefu_2K_Albedo.jpg')
+const wfuAo = textureLoader.load('./textures/wfu/wfufefu_2K_AO.jpg')
+const wfuDisplacementMap = textureLoader.load('./textures/wfu/wfufefu_2K_Displacement.jpg')
+const wfuNormal = textureLoader.load('./textures/wfu/wfufefu_2K_Normal.jpg')
+const wfuRoughnessMap = textureLoader.load('./textures/wfu/wfufefu_2K_Roughness.jpg')
+const wfuBump = textureLoader.load('./textures/wfu/wfufefu_2K_Bump.jpg')
+
 
 // console.log(door1);
 // 设置纹理偏移
@@ -54,24 +89,29 @@ const apalpha = textureLoader.load('./textures/aoalpha.jpg')
 // 创建几何体
 
 // 物体
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
+const cubeGeometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2)
 // 材质
-const basicMaterial = new THREE.MeshBasicMaterial({
-    color: '#ffff00',
-    map: door1,  // 纹理图
-    alphaMap: alpha, // 透明纹理图
-    transparent: true, //设置可以透明
+const material = new THREE.MeshStandardMaterial({
+    map: preview,  // 纹理图
+    // alphaMap: wfuAlbedo, // 透明纹理图
+    // transparent: true, //设置可以透明
     side: THREE.DoubleSide,
-    aoMap: apalpha,
-    aoMapIntensity: 0.6, //遮挡强度
+    displacementMap: wfuDisplacementMap,
+    aoMap: wfuAo,
+    normalMap: wfuNormal,
+    bumpMap: wfuBump,
+    roughnessMap: wfuRoughnessMap,
+    // aoMapIntensity: 0.5, //遮挡强度
+    // roughness: 0.5,//粗糙程度
+    // metalness: 0.5,//金属程度
     // opacity:0.5
 })
 
-const mesh = new THREE.Mesh(cubeGeometry, basicMaterial);
+const mesh = new THREE.Mesh(cubeGeometry, material);
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1)
+const planeGeometry = new THREE.PlaneGeometry(1, 1, 5, 5)
 
-const plane = new THREE.Mesh(planeGeometry, basicMaterial);
+const plane = new THREE.Mesh(planeGeometry, material);
 
 plane.position.set(3, 0, 0)
 
@@ -82,6 +122,16 @@ planeGeometry.setAttribute('uv2', new THREE.BufferAttribute(planeGeometry.attrib
 // mesh 添加第二组uv数据
 cubeGeometry.setAttribute('uv2', new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2))
 
+
+// 灯光(环境光)
+// const light = new THREE.AmbientLight(0x404040, 1); // soft white light
+
+// 灯光(直线光)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(10, 10, 10)
+
+scene.add(directionalLight);
+// scene.add(light);
 scene.add(mesh)
 scene.add(plane)
 
