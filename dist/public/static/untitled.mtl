@@ -1,0 +1,13 @@
+# Blender 3.3.1 MTL File: 'untitled.blend'
+# www.blender.org
+
+newmtl Old_Gravestone_wjuvdfcqx
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd D:/blanderDownload/Downloaded/3d/3d_historical_wjuvdfcqx/wjuvdfcqx_4K_Albedo.jpg
+map_Ns D:/blanderDownload/Downloaded/3d/3d_historical_wjuvdfcqx/wjuvdfcqx_4K_Roughness.jpg
+map_Bump -bm 1.000000 D:/blanderDownload/Downloaded/3d/3d_historical_wjuvdfcqx/wjuvdfcqx_4K_Normal_LOD0.jpg
