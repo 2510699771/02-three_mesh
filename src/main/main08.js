@@ -24,12 +24,12 @@ camera.position.set(0, 0, 10)
 const loader = new THREE.CubeTextureLoader();
 
 const textureCube = loader.load([
-    'textures/cubeMap/px.png',
-    'textures/cubeMap/nx.png',
-    'textures/cubeMap/py.png',
-    'textures/cubeMap/ny.png',
-    'textures/cubeMap/pz.png',
-    'textures/cubeMap/nz.png',
+    'textures/cubeMap/px.jpg',
+    'textures/cubeMap/nx.jpg',
+    'textures/cubeMap/py.jpg',
+    'textures/cubeMap/ny.jpg',
+    'textures/cubeMap/pz.jpg',
+    'textures/cubeMap/nz.jpg',
 ]);
 
 
@@ -99,18 +99,18 @@ const light = new THREE.AmbientLight(0x404040, 2); // soft white light
 
 
 // 点精灵
-var texture = new THREE.TextureLoader().load("textures/sixteenPic/招聘求职.png");
+// var texture = new THREE.TextureLoader().load("textures/sixteenPic/招聘求职.png");
 // 创建精灵材质对象SpriteMaterial
-var spriteMaterial = new THREE.SpriteMaterial({
-    color: 0xff00ff,//设置精灵矩形区域颜色
-    // rotation: Math.PI / 4,//旋转精灵对象45度，弧度值
-    map: texture,//设置精灵纹理贴图
-});
+// var spriteMaterial = new THREE.SpriteMaterial({
+//     color: 0xff00ff,//设置精灵矩形区域颜色
+//     // rotation: Math.PI / 4,//旋转精灵对象45度，弧度值
+//     map: texture,//设置精灵纹理贴图
+// });
 // 创建精灵模型对象，不需要几何体geometry参数
-var sprite = new THREE.Sprite(spriteMaterial);
-scene.add(sprite);
+// var sprite = new THREE.Sprite(spriteMaterial);
+// scene.add(sprite);
 // 控制精灵大小，比如可视化中精灵大小表征数据大小
-sprite.scale.set(3, 3, 1); //// 只需要设置x、y两个分量就可以
+// sprite.scale.set(3, 3, 1); //// 只需要设置x、y两个分量就可以
 
 
 
