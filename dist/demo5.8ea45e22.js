@@ -46747,11 +46747,13 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 var scene = new THREE.Scene();
 //  2.创建相机(透视相机)
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// const axesHelper = new THREE.AxesHelper(5);
-// axesHelper.name = 'axesHelper'
 
+// 动画
+var animationMixer = new THREE.AnimationMixer(scene);
+var clock = new THREE.Clock();
 var fbxLoader = new _FBXLoader.FBXLoader();
 var event = {};
+var action = null;
 
 // 初始化渲染器
 var render = new THREE.WebGLRenderer();
@@ -46763,6 +46765,11 @@ document.body.appendChild(render.domElement);
 event.onLoad = function (object) {
   console.log(object, '模型');
   scene.add(object);
+  var animationClip = object.animations.find(function (animationClip) {
+    return animationClip.name === 'mixamo.com';
+  });
+  action = animationMixer.clipAction(animationClip);
+  action.play();
 };
 var ambientLight = new THREE.AmbientLight(0xcccccc, 1);
 scene.add(ambientLight);
@@ -46774,7 +46781,11 @@ event.onProgress = function () {
 event.onError = function (url) {
   console.log('加载错误' + url);
 };
-var fbxPath = "./textures/fbxData/nurbs.fbx";
+
+// const fbxPath = "./textures/fbxData/nurbs.fbx";
+var fbxPath = "./textures/fbxData/Samba Dancing.fbx";
+// const fbxPath = "./textures/fbxData/stanford-bunny.fbx";
+
 fbxLoader.load(fbxPath, event.onLoad, event.onProgress, event.onError);
 
 // 平面 -------------
@@ -46804,6 +46815,7 @@ controls.enableDamping = true;
 
 function rendeer(time) {
   controls.update(); //更新阻尼
+  animationMixer.update(clock.getDelta()); //动画需要
   render.render(scene, camera);
   //  渲染下一帧的时候就会调用rendeer函数
   requestAnimationFrame(rendeer);

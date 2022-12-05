@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { GridHelper, AxesHelper } from 'three'   //用于 instanceof 过滤
 // 1.创建场景
 const scene = new THREE.Scene()
 //  2.创建相机(透视相机)

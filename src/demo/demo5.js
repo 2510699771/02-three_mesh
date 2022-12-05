@@ -9,15 +9,17 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 const scene = new THREE.Scene()
 //  2.创建相机(透视相机)
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-// const axesHelper = new THREE.AxesHelper(5);
-// axesHelper.name = 'axesHelper'
 
+// 动画
+const animationMixer = new THREE.AnimationMixer(scene)
+
+const clock = new THREE.Clock()
 
 const fbxLoader = new FBXLoader()
 
 let event = {}
 
-
+let action = null
 
 // 初始化渲染器
 const render = new THREE.WebGLRenderer()
@@ -32,6 +34,9 @@ event.onLoad = function (object) {
     console.log(object, '模型');
 
     scene.add(object);
+    const animationClip = object.animations.find((animationClip) => { return animationClip.name === 'mixamo.com' })
+    action = animationMixer.clipAction(animationClip)
+    action.play()
 
 }
 
@@ -51,7 +56,9 @@ event.onError = function (url) {
     console.log('加载错误' + url);
 }
 
-const fbxPath = "./textures/fbxData/nurbs.fbx";
+// const fbxPath = "./textures/fbxData/nurbs.fbx";
+const fbxPath = "./textures/fbxData/Samba Dancing.fbx";
+// const fbxPath = "./textures/fbxData/stanford-bunny.fbx";
 
 
 fbxLoader.load(fbxPath, event.onLoad, event.onProgress, event.onError)
@@ -99,6 +106,7 @@ controls.enableDamping = true
 
 function rendeer(time) {
     controls.update()  //更新阻尼
+    animationMixer.update(clock.getDelta())  //动画需要
     render.render(scene, camera);
     //  渲染下一帧的时候就会调用rendeer函数
     requestAnimationFrame(rendeer)
