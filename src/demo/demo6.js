@@ -15,7 +15,7 @@ const objLoader = new OBJLoader()  //obj文件加载器
 const mtlLoader = new MTLLoader()  //mtl文件加载器
 const renderer = new THREE.WebGLRenderer()  //初始化渲染器
 const orbitControls = new OrbitControls(camera, renderer.domElement) //轨道控制器
-
+orbitControls.autoRotate = true
 
 // 平面
 const geometry = new THREE.PlaneGeometry(100, 100); //平面实例化
@@ -59,6 +59,8 @@ directionalLight.castShadow = true;
 
 // 实例化后基本设置
 orbitControls.enableDamping = true //设置阻尼
+
+
 renderer.setSize(window.innerWidth, window.innerHeight) //设置渲染器的大小
 //告诉渲染器需要阴影效果
 renderer.shadowMap.enabled = true;
