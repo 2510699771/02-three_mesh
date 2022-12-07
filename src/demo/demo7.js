@@ -117,8 +117,8 @@ const guiParams = {
 }
 
 // 设置按钮点击触发某个事件
-gui.add(guiParams, 'isrotate').name('点击自动旋转')
-gui.add(guiParams, 'angleSpeed').name('旋转速度').min(0.01).max(0.1).step(0.01)
+gui.add(guiParams, 'isrotate').name('自动旋转')
+gui.add(guiParams, 'angleSpeed').name('旋转速度').min(0.001).max(0.1).step(0.001)
 
 
 // 公共加载事件对象
