@@ -19,7 +19,7 @@ const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
 
 // 实例化类
-const renderer = new THREE.WebGLRenderer()  //初始化渲染器
+const renderer = new THREE.WebGLRenderer({ antialias: true })  //初始化渲染器
 const gltfLoader = new GLTFLoader()  // 加载器
 const dracoLoader = new DRACOLoader()  // 加载器
 const orbitControls = new OrbitControls(camera, renderer.domElement) // 轨道控制器
