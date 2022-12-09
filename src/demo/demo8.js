@@ -13,7 +13,7 @@ let current = 0;      // 第几个物体
 
 // 1.创建场景
 scene = new THREE.Scene()
-scene.background = new THREE.Color('black')
+// scene.background = new THREE.Color('red')
 // 2.创建相机 
 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 5000)
 camera.position.set(600, 400, 1500);
@@ -171,6 +171,7 @@ function animate() {
 animate()
 
 
+
 window.addEventListener('resize', () => {
     console.log('画面更新了');
 
@@ -179,7 +180,7 @@ window.addEventListener('resize', () => {
     // 2.更新摄像机的投影矩阵
     camera.updateProjectionMatrix()
     // 3.更新渲染器
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(window.innerWidth - 50, window.innerHeight)
     // 4.设置渲染器像素比
     // renderer.setPixelRatio(window.devicePixelRatio)
 })
