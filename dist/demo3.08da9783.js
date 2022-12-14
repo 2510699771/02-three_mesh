@@ -39995,7 +39995,6 @@ var _OrbitControls = require("three/examples/jsm/controls/OrbitControls");
 var _GLTFLoader = require("three/examples/jsm/loaders/GLTFLoader");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-//用于 instanceof 过滤
 // 1.创建场景
 var scene = new THREE.Scene();
 //  2.创建相机(透视相机)
@@ -40008,7 +40007,12 @@ var clock = new THREE.Clock();
 var event = {};
 
 // 初始化渲染器
-var render = new THREE.WebGLRenderer();
+var render = new THREE.WebGLRenderer(
+//增加下面两个属性，可以抗锯齿
+{
+  antialias: true,
+  alpha: true
+});
 // 设置渲染尺寸大小
 render.setSize(window.innerWidth, window.innerHeight);
 
@@ -40017,13 +40021,15 @@ document.body.appendChild(render.domElement);
 var action = null;
 event.onLoad = function (obj) {
   console.log('加载完成', obj);
-  obj.scene.name = 'Soldier';
+
+  // obj.scene.name = 'Soldier'
+  // obj.scene.
   scene.add(obj.scene);
   scene.add(new THREE.AmbientLight(0xffffff, 1)); //环境光
   var animationClip = obj.animations.find(function (animationClip) {
-    return animationClip.name === 'Walk';
+    return animationClip.name === 'root|stand|Base Layer';
   });
-  console.log(animationClip, 'animationClip');
+  // console.log(animationClip, 'animationClip');
   action = animationMixer.clipAction(animationClip);
   action.play();
 };
@@ -40043,31 +40049,38 @@ function isClickSoldier(object) {
 var raycaster = new THREE.Raycaster();
 
 // 点击停止动画
-render.domElement.addEventListener('click', function (event) {
-  var clientX = event.clientX,
-    clientY = event.clientY;
-  var x = clientX / window.innerWidth * 2 - 1;
-  var y = -(clientY / window.innerHeight) * 2 + 1;
-  var pointer = new THREE.Vector2(x, y);
-  raycaster.setFromCamera(pointer, camera);
-  var intersects = raycaster.intersectObjects(scene.children, true);
-  var intersect = intersects.filter(function (inter) {
-    return inter.object.name !== 'axesHelper' && inter.object.name !== 'gridHelper' && inter.object.name !== 'plane';
-  })[0]; //过滤掉辅助网格 和 白色地板
+// render.domElement.addEventListener('click', event => {
+//     let { clientX, clientY } = event
+//     let x = (clientX / window.innerWidth) * 2 - 1
+//     let y = - (clientY / window.innerHeight) * 2 + 1
+//     const pointer = new THREE.Vector2(x, y);
 
-  // console.log(intersect, 'intersect');
-  if (intersect && isClickSoldier(intersect.object)) {
-    console.log(1, 'action');
-    action.stop();
-  }
-});
+//     raycaster.setFromCamera(pointer, camera)
+
+//     const intersects = raycaster.intersectObjects(scene.children, true)
+
+//     const intersect = intersects.filter(inter => {
+//         return inter.object.name !== 'axesHelper' && inter.object.name !== 'gridHelper' && inter.object.name !== 'plane'
+//     })[0]  //过滤掉辅助网格 和 白色地板
+
+//     // console.log(intersect, 'intersect');
+//     if (intersect && isClickSoldier(intersect.object)) {
+//         console.log(1, 'action');
+//         action.stop()
+//     }
+
+// })
+
 event.onProgress = function () {
   console.log('加载过程中');
 };
 event.onError = function (url) {
   console.log('加载错误' + url);
 };
-var gltfPath = "./public/static/Soldier.glb";
+
+// const gltfPath = "./public/static/Soldier.glb";  //机器人
+var gltfPath = "./public/static/woman.glb"; //   女生
+
 gltfLoader.load(gltfPath, event.onLoad, event.onProgress, event.onError);
 
 // 平面 -------------
@@ -40080,14 +40093,15 @@ var material = new THREE.MeshBasicMaterial({
 var plane = new THREE.Mesh(geometry, material);
 plane.name = 'plane';
 plane.rotation.x = Math.PI / 2;
-scene.add(plane);
+
+// scene.add(plane);
 
 // 网格辅助---------------
 
 var gridHelper = new THREE.GridHelper(50, 50);
-gridHelper.name = 'gridHelper';
+// gridHelper.name = 'gridHelper'
 scene.add(gridHelper);
-camera.position.set(0, 20, 20);
+camera.position.set(0, 10, 10);
 // scene.add(axesHelper);
 scene.add(camera);
 
@@ -40161,7 +40175,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60644" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53675" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

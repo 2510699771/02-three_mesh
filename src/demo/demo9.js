@@ -134,6 +134,7 @@ let allGraph = { table: [], sphere: [], helix: [], grid: [] } //  元素周期�
 // 1.创建场景
 scene = new THREE.Scene()
 // scene.background = new THREE.Color('red')
+// scene.background = new THREE.Color(0xa0a0a0);
 // 2.创建相机 
 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight - 55, 1, 5000)
 camera.position.set(0, 0, 2500);
