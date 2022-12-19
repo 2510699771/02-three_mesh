@@ -40023,7 +40023,7 @@ event.onLoad = function (obj) {
   console.log('加载完成', obj);
 
   // obj.scene.name = 'Soldier'
-  // obj.scene.
+  obj.scene.position.set(0, 0, 0);
   scene.add(obj.scene);
   scene.add(new THREE.AmbientLight(0xffffff, 1)); //环境光
   var animationClip = obj.animations.find(function (animationClip) {
@@ -40079,7 +40079,8 @@ event.onError = function (url) {
 };
 
 // const gltfPath = "./public/static/Soldier.glb";  //机器人
-var gltfPath = "./public/static/woman.glb"; //   女生
+// const gltfPath = "./public/static/woman.glb";  //   女生
+var gltfPath = "./public/static/sceneandwoman.glb"; //  场景 + 女生
 
 gltfLoader.load(gltfPath, event.onLoad, event.onProgress, event.onError);
 
@@ -40101,7 +40102,7 @@ plane.rotation.x = Math.PI / 2;
 var gridHelper = new THREE.GridHelper(50, 50);
 // gridHelper.name = 'gridHelper'
 scene.add(gridHelper);
-camera.position.set(0, 10, 10);
+camera.position.set(0, 50, 50);
 // scene.add(axesHelper);
 scene.add(camera);
 
